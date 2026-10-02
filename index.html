@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N · Николь — История</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="locked">
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="top-bar">
+    <div class="logo-mark">Николь</div>
+    <div class="top-actions">
+        <button class="icon-btn" id="musicBtn" title="Музыка">♪</button>
+    </div>
+</div>
+
+<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
+
+<div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Закрыть">✕</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Назад">‹</button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Вперёд">›</button>
+    <div class="lb-content">
+        <img id="lbImg" src="" alt="">
+        <div class="lb-caption">
+            <div class="lb-title" id="lbTitle"></div>
+            <div class="lb-date" id="lbDate"></div>
+        </div>
+    </div>
+    <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<div class="gate" id="gate">
+    <div class="gate-inner">
+        <div class="gate-label">Личный выпуск · только для тебя</div>
+        <h1 class="gate-title">Введи<br><em>секретное слово</em></h1>
+        <p class="gate-subtitle">Подсказка: «Ты меня так называешь»</p>
+        <div class="gate-input-group">
+            <input type="password" class="gate-input" id="gateInput" placeholder="Слово..." autocomplete="off" autofocus>
+        </div>
+        <div class="gate-error" id="gateError">Не то слово, любимая. Попробуй ещё раз.</div>
+        <button class="gate-btn" id="gateBtn">Открыть выпуск</button>
+        <p class="gate-hint">Сделано с <strong>любовью</strong> для одной особенной девушки</p>
+    </div>
+</div>
+
+<div class="content" id="content">
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-top">
+                <div class="hero-top-left">
+                    <span class="hero-dot"></span>
+                    <span>Том I · Личное издание</span>
+                </div>
+                <div id="todayDate">—</div>
+            </div>
+
+            <h1 class="hero-title">
+                История<br>
+                моих чувств<br>
+                <span class="accent" id="heroName">к Николь</span>
+            </h1>
+
+            <div class="hero-bottom">
+                <p class="hero-desc" id="typewriter"></p>
+                <div class="hero-scroll">
+                    <span>Листай ниже</span>
+                    <span class="hero-scroll-arrow">↓</span>
+                </div>
+            </div>
+
+            <div class="counter">
+                <div class="counter-head">Мы вместе уже</div>
+                <div class="counter-grid">
+                    <div class="counter-cell"><span class="counter-num" id="years">0</span><span class="counter-label">Лет</span></div>
+                    <div class="counter-cell"><span class="counter-num" id="months">0</span><span class="counter-label">Месяцев</span></div>
+                    <div class="counter-cell"><span class="counter-num" id="days">0</span><span class="counter-label">Дней</span></div>
+                    <div class="counter-cell"><span class="counter-num" id="hours">00</span><span class="counter-label">Часов</span></div>
+                    <div class="counter-cell"><span class="counter-num" id="minutes">00</span><span class="counter-label">Минут</span></div>
+                    <div class="counter-cell"><span class="counter-num" id="seconds">00</span><span class="counter-label">Секунд</span></div>
+                </div>
+            </div>
+
+            <div id="heroQuote"></div>
+        </div>
+    </section>
+
+    <section class="spread reveal" id="meetingSection"></section>
+    <section class="spread reveal" id="timelineSection"></section>
+    <section class="spread reveal" id="gallerySection"></section>
+    <section class="spread reveal" id="separateGallerySection"></section>
+    <section class="spread reveal" id="nicknamesSection"></section>
+    <section class="spread reveal" id="momentsSection"></section>
+    <section class="spread reveal" id="bioFactsSection"></section>
+    <section class="spread reveal" id="poemSection"></section>
+    <section class="spread reveal" id="wheelSection"></section>
+    <section class="spread reveal" id="complimentSection"></section>
+    <section class="spread reveal" id="letterSection"></section>
+    <section class="spread reveal" id="secretSection"></section>
+    <section class="spread reveal" id="futureSection"></section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-mark">Сделано с <em>любовью</em> для Николь</div>
+            <div class="footer-meta">
+                <div>Том I · Личное издание</div>
+                <div id="footerDate">—</div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/effects.js"></script>
+<script src="js/counter.js"></script>
+<script src="js/lightbox.js"></script>
+<script src="js/sections.js"></script>
+<script src="js/music.js"></script>
+<script src="js/gate.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
