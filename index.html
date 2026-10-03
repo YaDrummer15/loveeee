@@ -3,128 +3,769 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>N · Николь — История</title>
+<title>Николь · История моих чувств</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&family=Marck+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="locked">
 
-<div class="progress-bar" id="progressBar"></div>
+<div class="read-progress" id="readProgress"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 
-<div class="top-bar">
-    <div class="logo-mark">Николь</div>
-    <div class="top-actions">
-        <button class="icon-btn" id="musicBtn" title="Музыка">♪</button>
-    </div>
+<!-- ЭКРАН БЛОКИРОВКИ -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box" id="lockBox">
+    <div class="lock-ico">🔒</div>
+    <h2 data-i18n="lock.title">Эта история заперта</h2>
+    <div class="sub" data-i18n="lock.sub">Введите пароль, чтобы открыть</div>
+    <input type="password" id="lockInput" class="lock-input" placeholder="пароль" autocomplete="off">
+    <button class="lock-btn" id="lockBtn" data-i18n="lock.btn">Открыть</button>
+    <div class="lock-error" id="lockError" data-i18n="lock.error">Неверный пароль. Попробуй ещё раз.</div>
+    <div class="lock-hint" data-i18n="lock.hint">Подсказка: как ты меня называешь</div>
+  </div>
 </div>
 
-<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
+<!-- ПРЕЛОАДЕР -->
+<div class="preloader" id="preloader">
+  <div class="scene">
+    <div class="envelope" id="envelope">
+      <div class="env-body">
+        <div class="env-flap"></div>
+        <div class="env-letter" id="envLetter">
+          <span class="letter-B">Б</span>
+        </div>
+      </div>
+      <div class="env-seal">Б</div>
+    </div>
+    <div class="glow-ring" id="glowRing"></div>
+  </div>
+  <div class="prompt" id="promptText">нажми, чтобы открыть письмо</div>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<div class="bg-layer"></div>
+<div class="bg-dust" id="dust"></div>
+<div class="bg-hearts" id="hearts"></div>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="nav-brand" data-i18n="brand">Николь <em>· journal</em></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#ch1" data-i18n="nav.ch1">Знакомство</a></li>
+    <li><a href="#ch2" data-i18n="nav.ch2">Моменты</a></li>
+    <li><a href="#ch3" data-i18n="nav.ch3">Фотографии</a></li>
+    <li><a href="#ch4" data-i18n="nav.ch4">Её взгляд</a></li>
+    <li><a href="#ch7" data-i18n="nav.ch7">Письмо</a></li>
+    <li><a href="#ch9" data-i18n="nav.ch9">Будущее</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="lang-switch" id="langSwitch">
+      <button data-lang="ru" class="active">RU</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <button class="music-btn paused" id="musicBtn" aria-label="Включить музыку">
+      <span class="music-bars"><i></i><i></i><i></i><i></i></span>
+      <span class="label" data-i18n="music.label">Музыка</span>
+    </button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Меню">☰</button>
+  </div>
+</nav>
+
+<!-- ИНДИКАТОР ГЛАВ -->
+<div class="chapter-nav" id="chapterNav">
+  <a href="#top" title="Начало"></a>
+  <a href="#ch1" title="Знакомство"></a>
+  <a href="#ch2" title="Моменты"></a>
+  <a href="#ch3" title="Фотографии"></a>
+  <a href="#ch4" title="Её взгляд"></a>
+  <a href="#ch5" title="Имена"></a>
+  <a href="#ch6" title="Биология"></a>
+  <a href="#ch7" title="Письмо"></a>
+  <a href="#ch8" title="Скрытая"></a>
+  <a href="#ch9" title="Будущее"></a>
+</div>
+
+<header class="hero" id="top">
+  <div class="kicker" data-i18n="hero.kicker">Официальный сайт · создан для Николь</div>
+  <h1>
+    <span class="word" data-i18n="hero.title1">История</span>
+    <span class="word" data-i18n="hero.title2">моих</span><br>
+    <span class="word" data-i18n="hero.title3">чувств</span>
+    <span class="word" data-i18n="hero.title4">к</span>
+    <span class="word" data-i18n="hero.title5"><em>Николь</em></span>
+  </h1>
+  <p class="sub" data-i18n="hero.sub">Кинематографичная хроника одного сердца — от первого взгляда до бесконечности.</p>
+  <div class="official" data-i18n="hero.official">Приватный архив · только для неё</div>
+  <div class="divider"></div>
+</header>
+
+<section class="timer-section reveal">
+  <div class="timer-label" data-i18n="timer.label">Мы в дружбе с 4 февраля 2026</div>
+  <div class="timer" id="timer">
+    <div class="cell" id="cell-years"><div class="num" id="years">0</div><div class="cap" data-i18n="timer.years">лет</div></div>
+    <div class="cell" id="cell-months"><div class="num" id="months">0</div><div class="cap" data-i18n="timer.months">месяцев</div></div>
+    <div class="cell" id="cell-days"><div class="num" id="days">0</div><div class="cap" data-i18n="timer.days">дней</div></div>
+    <div class="cell" id="cell-hours"><div class="num" id="hours">0</div><div class="cap" data-i18n="timer.hours">часов</div></div>
+    <div class="cell" id="cell-minutes"><div class="num" id="minutes">0</div><div class="cap" data-i18n="timer.minutes">минут</div></div>
+    <div class="cell" id="cell-seconds"><div class="num" id="seconds">0</div><div class="cap" data-i18n="timer.seconds">секунд</div></div>
+  </div>
+</section>
+
+<!-- CHAPTER 1 -->
+<section class="chapter wrap reveal" id="ch1">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава первая</div>
+    <h2>Наше <em>первое знакомство</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <p class="lead">Самое первое наше знакомство произошло в поездке в <span class="accent">Новый Херсонес</span>, когда я предложил тебе прогуляться по территории церкви. Мы сделали несколько фотографий вместе, ходили вокруг территории, и я попросил у тебя телеграм, чтобы мы могли общаться и чтобы я мог сделать для тебя <span class="accent">первые два подарка</span> в нём.</p>
+
+  <div class="photo-pair">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image2aa356b730b21ec9.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image2aa356b730b21ec9.png" alt="Первый подарок"></div>
+      <figcaption class="cap">Первый подарок</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image095195572d214f76.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image095195572d214f76.png" alt="Второй подарок"></div>
+      <figcaption class="cap">Второй подарок</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <p>Потом мы весело провели время вместе. Это было <span class="accent">незабываемое воспоминание</span>, которое осталось со мной навсегда.</p>
+
+  <div class="photo-pair">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image905877be501d997f.md.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image905877be501d997f.md.png" alt="Прогулка по территории"></div>
+      <figcaption class="cap">Прогулка по территории</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image7a9f386fe52f804a.md.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image7a9f386fe52f804a.md.png" alt="Незабываемый день"></div>
+      <figcaption class="cap">Незабываемый день</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <p>И тот самый момент, когда я попросил у тебя телеграм:</p>
+
+  <div class="photo-solo">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/imagee5a8001c20371404.md.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/imagee5a8001c20371404.md.png" alt="Просьба о телеграме"></div>
+      <figcaption class="cap">«Можно твой телеграм?»</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <p>С того самого дня я начал ухаживать за тобой и делать всё возможное, чтобы ты была счастлива. Каждый день, каждое сообщение, каждая встреча — всё это было ради одной цели: чтобы твоя улыбка не гасла.</p>
+
+  <div class="ornament">
+    <span class="line"></span>
+    <span class="diamond">❖</span>
+    <span class="line r"></span>
+  </div>
+</section>
+
+<!-- ЦИТАТА 1 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Если постараться, почти во всём можно отыскать что-нибудь радостное или хорошее.»</p>
+    <span class="quote-author">Полинна</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 2 -->
+<section class="chapter wrap reveal" id="ch2">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава вторая</div>
+    <h2>Важные моменты <em>в нашей дружбе</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="timeline">
+    <div class="event" style="--i:0">
+      <div class="date">03.02.2026</div>
+      <h3>Первое наше общение</h3>
+      <p>Оно было не настолько волнительным для меня, так как я был в тебя влюблён ещё в <span class="accent">сентябре 2025 года</span>.</p>
+    </div>
+    <div class="event" style="--i:1">
+      <div class="date">04.02.2026</div>
+      <h3>Первое наше сообщение в телеграме</h3>
+      <p>Тот самый момент, когда <span class="accent">всё началось</span>. После этого мы стали чаще видеться и общаться.</p>
+    </div>
+    <div class="event" style="--i:2">
+      <div class="date">06.02.2026</div>
+      <h3>Наша первая прогулка</h3>
+      <p>Было волнительно и немного страшно: я не знал, как правильно вести себя на прогулке после долгого перерыва в общении с друзьями.</p>
+    </div>
+    <div class="event" style="--i:3">
+      <div class="date">07.02.2026</div>
+      <h3>Наш первый поход в кино на «Чебурашку 2»</h3>
+      <p>Этот мультфильм был <span class="accent">самым прекрасным</span>: мы весело провели время. После этого мы пошли в «МирБулок», ты выбрала чай, а я выбрал кофе, и мы обсуждали различные темы.</p>
+    </div>
+    <div class="event" style="--i:4">
+      <div class="date">07.02.2026</div>
+      <h3>Первая совместная фотография</h3>
+      <p>Мы впервые оказались в одном кадре. И этот кадр — теперь моя <span class="accent">самая тёплая память</span>.</p>
+    </div>
+    <div class="event" style="--i:5">
+      <div class="date">23.02.2026</div>
+      <h3>Просто вместе</h3>
+      <p>День, когда мы поняли: нам не нужны особые поводы. <span class="accent">Достаточно просто быть рядом.</span></p>
+    </div>
+    <div class="event" style="--i:6">
+      <div class="date">04.03.2026</div>
+      <h3>Твой день рождения</h3>
+      <p>Я хотел подарить тебе весь мир, но ты сказала, что тебе <span class="accent">достаточно меня</span>.</p>
+    </div>
+    <div class="event" style="--i:7">
+      <div class="date">08.03.2026</div>
+      <h3>Первое 8 Марта</h3>
+      <p>Первый праздник, который я встречал с тобой. И я уже знал — <span class="accent">так будет всегда</span>.</p>
+    </div>
+    <div class="event" style="--i:8">
+      <div class="date">02.10.2026</div>
+      <h3>Твоя поездка с родителями</h3>
+      <p>Ты уехала, а я считал каждую минуту до твоего возвращения. <span class="accent">Даже на расстоянии ты была рядом.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ЦИТАТА 2 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Тот шагает быстрей, кто шагает один.»</p>
+    <span class="quote-author">Мартин Иден</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 3 -->
+<section class="chapter wrap reveal" id="ch3">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава третья</div>
+    <h2>Наши лучшие <em>совместные фотографии</em><br>и твои самые лучшие фотографии</h2>
+    <div class="rule"></div>
+  </div>
+
+  <p class="lead">Наши совместные фотографии</p>
+
+  <div class="photo-pair">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image80d089722c9d9d42.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image80d089722c9d9d42.png" alt="7 февраля 2026 — первая совместная"></div>
+      <figcaption class="cap">7 февраля 2026 · Первая совместная</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/imagecd4c6e527fef5f69.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/imagecd4c6e527fef5f69.png" alt="22 февраля 2026 — Мир Булок"></div>
+      <figcaption class="cap">22 февраля 2026 · «Мир Булок»</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <div class="photo-pair">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image1d918282ab4c90fa.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image1d918282ab4c90fa.png" alt="23 февраля 2026 — просто вместе"></div>
+      <figcaption class="cap">23 февраля 2026 · Просто вместе</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image03ba58fd71ccce6f.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image03ba58fd71ccce6f.png" alt="4 марта 2026 — день рождения"></div>
+      <figcaption class="cap">4 марта 2026 · День рождения</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <div class="photo-solo">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image01a5adb3197f33ce.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image01a5adb3197f33ce.png" alt="8 марта 2026 — первое 8 марта"></div>
+      <figcaption class="cap">8 марта 2026 · Первое 8 Марта</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <p class="lead" style="margin-top:70px">Твои самые лучшие фотографии</p>
+
+  <div class="photo-pair">
+    <figure class="photo tall zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image846f24ade90c3111.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image846f24ade90c3111.png" alt="10 мая 2024"></div>
+      <figcaption class="cap">10 мая 2024 · «We do not remember days, we remember moments.» 💛</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo tall zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image867bfabc994fb08f.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image867bfabc994fb08f.png" alt="29 сентября 2023"></div>
+      <figcaption class="cap">29 сентября 2023 · Я счастливый как никто</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <div class="photo-pair">
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image37dc52c7b5e115fa.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image37dc52c7b5e115fa.png" alt="13 апреля 2024"></div>
+      <figcaption class="cap">13 апреля 2024</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo tall zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image78becc29151acc0b.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image78becc29151acc0b.png" alt="8 октября 2025"></div>
+      <figcaption class="cap">8 октября 2025 · «Не верь тому, кто говорит красиво, в его словах всегда игра. Поверь тому, кто молчаливо, творит красивые дела.»</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+
+  <div class="photo-pair">
+    <figure class="photo tall zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image59b075b62a466b2c.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image59b075b62a466b2c.png" alt="12 июня 2026"></div>
+      <figcaption class="cap">12 июня 2026 · «Ваше время ограничено, не тратьте его, живя чужой жизнью.»</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+    <figure class="photo small zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image17d0de4cf4fc4af2.png">
+      <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/03/image17d0de4cf4fc4af2.png" alt="2 октября 2026"></div>
+      <figcaption class="cap">2 октября 2026 · Поездка с родителями</figcaption>
+      <span class="zoom-ico">⤢</span>
+    </figure>
+  </div>
+</section>
+
+<!-- ЦИТАТА 3 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Ты навсегда в ответе за тех, кого приручил.»</p>
+    <span class="quote-author">Маленький принц</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 4 -->
+<section class="chapter wrap reveal" id="ch4">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава четвёртая</div>
+    <h2>Интересные фотографии, <em>которые ты делала</em>,<br>и они самые прекрасные</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="carousel reveal" data-autoplay="5000">
+    <button class="car-btn prev" aria-label="Назад">‹</button>
+    <div class="car-track" id="carTrack">
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagecd7c2bc0c0dfd9b7.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagecd7c2bc0c0dfd9b7.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagec223daddca306cbe.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagec223daddca306cbe.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image8ae06119e15c7f7b.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image8ae06119e15c7f7b.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagef46e6bd08929f990.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagef46e6bd08929f990.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image08572f70b112127f.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image08572f70b112127f.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagefed7e7c499d07feb.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imagefed7e7c499d07feb.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image716a77e808ba373b.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image716a77e808ba373b.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imageb63f9dc6bff9a3f1.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/imageb63f9dc6bff9a3f1.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+      <figure class="car-slide zoomable" data-full="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image32cb084231dce500.md.png">
+        <div class="photo-inner"><img src="https://storage.yandexcloud.net/b.fotovssylku.ru/2026/10/02/image32cb084231dce500.md.png" alt=""></div>
+        <span class="zoom-ico">⤢</span>
+      </figure>
+    </div>
+    <button class="car-btn next" aria-label="Вперёд">›</button>
+    <div class="car-dots" id="carDots"></div>
+  </div>
+</section>
+
+<!-- ЦИТАТА 4 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Что мне не нравится, то мне не нравится, и с какой стати я должен делать вид, что мне это понравилось!»</p>
+    <span class="quote-author">Мартин Иден</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 5 -->
+<section class="chapter wrap reveal" id="ch5">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава пятая</div>
+    <h2>Наши имена <em>между нами</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <p class="lead">У каждой пары есть свой язык. Слова, которые звучат только для двоих и значат больше, чем все остальные. Это наши имена — те, что мы дарим друг другу шёпотом.</p>
+
+  <div class="names-grid">
+    <div class="names-col">
+      <div class="names-col-head">
+        <div class="nch-kicker">её</div>
+        <h3>Как я зову тебя</h3>
+        <div class="nch-line"></div>
+      </div>
+      <ul class="names-list">
+        <li><span class="n-num">i</span><span class="n-name">Солнышко</span></li>
+        <li><span class="n-num">ii</span><span class="n-name">Милая</span></li>
+        <li><span class="n-num">iii</span><span class="n-name">Булочка</span></li>
+        <li><span class="n-num">iv</span><span class="n-name">Родная</span></li>
+        <li><span class="n-num">v</span><span class="n-name">Единственная</span></li>
+      </ul>
+    </div>
+    <div class="names-col">
+      <div class="names-col-head">
+        <div class="nch-kicker">мои</div>
+        <h3>Как ты зовёшь меня</h3>
+        <div class="nch-line"></div>
+      </div>
+      <ul class="names-list">
+        <li><span class="n-num">i</span><span class="n-name">Бублик</span></li>
+      </ul>
+      <div class="names-note">Одного имени хватит — если это оно.</div>
+    </div>
+  </div>
+
+  <div class="ornament">
+    <span class="line"></span>
+    <span class="diamond">❖</span>
+    <span class="line r"></span>
+  </div>
+</section>
+
+<!-- ЦИТАТА 5 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Ограниченные умы замечают ограниченность только в других.»</p>
+    <span class="quote-author">Мартин Иден</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 6 -->
+<section class="chapter wrap reveal" id="ch6">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава шестая</div>
+    <h2>Биология <em>любви</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <p class="lead">Николь любит биологию. А я люблю наблюдать, как у неё загораются глаза, когда она рассказывает о том, как устроена жизнь. Вот три вещи, которые она однажды рассказала — а я запомнил, потому что рассказывала она.</p>
+
+  <div class="bio-grid">
+    <article class="bio-card">
+      <div class="bio-num">01</div>
+      <div class="bio-icon">↕</div>
+      <h3>Утром мы выше,<br>чем вечером</h3>
+      <p>За ночь межпозвоночные диски восстанавливаются и впитывают влагу, а к вечеру под давлением гравитации сжимаются. Разница — 1–2 см. Вот почему по утрам можно считать себя чуть-чуть выше.</p>
+      <div class="bio-line"></div>
+    </article>
+    <article class="bio-card">
+      <div class="bio-num">02</div>
+      <div class="bio-icon">◦</div>
+      <h3>Лёгкие не чувствуют<br>боли</h3>
+      <p>В самих лёгких нет болевых рецепторов. Опухоль может расти годами без симптомов. Боль появляется, только когда рак прорастает в плевру, рёбра или позвоночник. Поэтому рак лёгких часто находят уже на 4-й стадии.</p>
+      <div class="bio-line"></div>
+    </article>
+    <article class="bio-card">
+      <div class="bio-num">03</div>
+      <div class="bio-icon">⌘</div>
+      <h3>Рудименты<br>и древние рефлексы</h3>
+      <p>Копчик — рудимент хвоста, доставшийся нам от предков. А гусиная кожа — древний рефлекс, который когда-то распушал шерсть, чтобы согреться или напугать врага. Сегодня шерсти нет, но механизм сохранился.</p>
+      <div class="bio-line"></div>
+    </article>
+  </div>
+
+  <div class="ornament">
+    <span class="line"></span>
+    <span class="diamond">❖</span>
+    <span class="line r"></span>
+  </div>
+</section>
+
+<!-- ЦИТАТА 6 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Вы красивые, но пустые… Ради вас не захочется умереть.»</p>
+    <span class="quote-author">Маленький принц</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- ЦИТАТА 7 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Кто не стремится жить, тот на пути к концу.»</p>
+    <span class="quote-author">Мартин Иден</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 7 -->
+<section class="chapter wrap reveal" id="ch7">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава седьмая</div>
+    <h2>Письмо <em>для тебя</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="letter-stage">
+    <article class="letter">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="head">
+        <div class="small">Из моего сердца</div>
+        <div class="ttl">Для тебя · Навсегда</div>
+        <div class="ornament">
+          <span class="line"></span><span class="diamond">❖</span><span class="line r"></span>
+        </div>
+      </div>
+      <p class="first">Милая Николь,</p>
+      <p>Я пишу это сообщение, чтобы выразить всю ту нежность, восхищение и любовь, которые я к тебе испытываю. С каждым днём я всё больше и больше убеждаюсь, что ты самая особенная и прекрасная девушка, которую я когда-либо встречал. Своей красотой ты буквально ослепляешь меня. Твоё присутствие наполняет мою жизнь радостью и счастьем.</p>
+      <p>Каждый раз, когда мы проводим время вместе, мои душевные раны заживают, а сердце полностью наполняется любовью.</p>
+      <p>Ты не только прекрасна снаружи, но и внутри. Я благодарен за каждую минуту, проведённую с тобой. Твоя улыбка пробуждает во мне чувства счастья и безграничного восхищения.</p>
+      <p>Я обещаю быть рядом во всех жизненных ситуациях, как в радости, так и в горе. Я буду поддерживать тебя и быть твоей опорой. Твоё счастье и улыбка — моя главная цель в жизни.</p>
+      <p>Николь, ты особенная девушка, которую я хочу видеть рядом всю жизнь.</p>
+      <p>Двумя словами: я люблю тебя.</p>
+      <div class="sign">
+        <span class="small">С любовью,</span>
+        Твой Бублик
+      </div>
+      <div class="seal">Б</div>
+    </article>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 8 -->
+<section class="chapter wrap reveal" id="ch8">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава восьмая</div>
+    <h2>Скрытая <em>страница</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="letter-stage">
+    <article class="letter">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="head">
+        <div class="small">Что я хочу тебе сказать, но стесняюсь</div>
+        <div class="ttl">Из самого сердца · Только для тебя</div>
+        <div class="ornament">
+          <span class="line"></span><span class="diamond">❖</span><span class="line r"></span>
+        </div>
+      </div>
+      <p class="first">Николь,</p>
+      <p>Знаешь, любимая, иногда я задумываюсь, как объяснить тебе всю силу моей любви, но понимаю — ни одно слово в мире не сможет описать то, что я чувствую к тебе. Это не просто симпатия, не просто привычка, это что-то большее, что-то, что стало частью меня самого.</p>
+      <p>Я люблю тебя так, что каждое утро просыпаюсь с мыслью о тебе. Я люблю тебя в каждой своей мечте, в каждом вдохе и ударе сердца. Ты — моя самая большая радость и самое красивое чудо, которое подарила мне жизнь.</p>
+      <p>Мне дорого в тебе всё: твой взгляд, в котором я нахожу покой; твоя улыбка, которая разгоняет все мои тревоги; твой голос, который звучит для меня музыкой.</p>
+      <p>Ты для меня больше, чем просто девушка. Ты моя опора, мой смысл, моё будущее. Я хочу прожить с тобой каждый день своей жизни.</p>
+      <p>Я обещаю тебе, что никогда не предам и не отпущу. Моя любовь к тебе — это не мимолётное чувство, это выбор всей моей души и сердца.</p>
+      <p>Ты — мой мир. Ты — моё всё. И я бесконечно благодарен судьбе за то, что она подарила мне тебя.</p>
+      <p>Знай, что моё «я тебя люблю» — это не просто слова. Это обещание. Обещание быть рядом, ценить, беречь и всегда выбирать тебя.</p>
+      <div class="sign">
+        <span class="small">Навсегда твой,</span>
+        Бублик
+      </div>
+      <div class="seal">Б</div>
+    </article>
+  </div>
+</section>
+
+<!-- ЦИТАТА 8 -->
+<section class="quote-section reveal">
+  <div class="quote-inner">
+    <span class="quote-ornament">✦ ✦ ✦</span>
+    <p class="quote-text">«Там хорошо, где нас нет.»</p>
+    <span class="quote-author">Маленький принц</span>
+  </div>
+</section>
+
+<div class="chapter-divider reveal">
+  <span class="line"></span>
+  <span class="ornament-icon">❖ ✦ ❖</span>
+  <span class="line"></span>
+</div>
+
+<!-- CHAPTER 9 -->
+<section class="chapter wrap reveal" id="ch9">
+  <div class="chapter-head">
+    <div class="chapter-num">Глава девятая</div>
+    <h2>Письмо <em>в будущее</em></h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="locked">
+    <div class="lock-ico">✉</div>
+    <h3>Откроется 04.02.2027</h3>
+    <p>Ровно через год после того, как всё началось.</p>
+    <div class="countdown" id="countdown">
+      <div class="c"><div class="n" id="cd-d">0</div><div class="l">дней</div></div>
+      <div class="c"><div class="n" id="cd-h">0</div><div class="l">часов</div></div>
+      <div class="c"><div class="n" id="cd-m">0</div><div class="l">минут</div></div>
+      <div class="c"><div class="n" id="cd-s">0</div><div class="l">секунд</div></div>
+    </div>
+    <div class="future-letter" id="futureLetter">
+      <article class="letter">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <div class="head">
+          <div class="small">Ровно через год</div>
+          <div class="ttl">04 · 02 · 2027</div>
+          <div class="ornament">
+            <span class="line"></span><span class="diamond">❖</span><span class="line r"></span>
+          </div>
+        </div>
+        <p class="first">Николь, привет.</p>
+        <p>Сегодня ровно год, как мы вместе. Целый год моментов, воспоминаний, улыбок и разговоров.</p>
+        <p>За это время многое было — радость, поддержка, иногда трудности, но самое главное, что всё время мы были рядом друг с другом.</p>
+        <p>Этот год показал мне, насколько важна для меня ты.</p>
+        <p>Спасибо тебе за твою заботу, за твоё тепло, за то, что умеешь поддерживать в трудные моменты и разделить со мной счастливые.</p>
+        <p>С тобой я научился чувствовать себя спокойно и по-настоящему счастливым.</p>
+        <div class="sign">
+          <span class="small">С любовью,</span>
+          Бублик
+        </div>
+        <div class="seal">Б</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="heart" id="secretHeart" title="Нажми три раза…">♥</div>
+  <div class="l1" data-i18n="footer.l1">Официальный сайт · создан для Николь</div>
+  <div class="l2" data-i18n="footer.l2">Твой Бублик · навсегда</div>
+  <div class="hint" data-i18n="footer.hint">нажми на сердце три раза</div>
+</footer>
+
+<!-- СЕКРЕТНАЯ СТРАНИЦА -->
+<div class="secret-page" id="secretPage">
+  <button class="secret-close" id="secretClose">✕</button>
+  <article class="letter" style="max-width:680px">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+    <div class="head">
+      <div class="small">Только для тебя</div>
+      <div class="ttl">Секретное послание</div>
+      <div class="ornament">
+        <span class="line"></span><span class="diamond">❖</span><span class="line r"></span>
+      </div>
+    </div>
+    <p class="first">Николь,</p>
+    <p>Если ты это читаешь — значит, ты нашла то, что спрятано в самом сердце этого сайта. Я хотел сказать тебе что-то, что не поместилось ни в одну из глав.</p>
+    <p>Ты — не просто часть моей жизни. Ты — та, благодаря кому моя жизнь стала жизнью. Каждый раз, когда ты рядом, мир становится тише, теплее и правильнее.</p>
+    <p>Я не знаю, что будет завтра, через год или через десять лет. Но я точно знаю одно: я хочу, чтобы ты была рядом — в каждом из этих дней.</p>
+    <p>Спасибо, что ты есть. Спасибо за каждую улыбку, за каждый взгляд, за каждое «привет».</p>
+    <div class="sign">
+      <span class="small">Навсегда твой,</span>
+      Бублик
+    </div>
+    <div class="seal">♥</div>
+  </article>
+</div>
+
+<!-- ДОСТИЖЕНИЯ -->
+<div class="achievements" id="achievements">
+  <button class="ach-toggle" id="achToggle" aria-label="Достижения">
+    <span class="ach-count" id="achCount">0/8</span>
+    <span class="ach-ico">★</span>
+  </button>
+  <div class="ach-panel" id="achPanel">
+    <div class="ach-head">
+      <div class="ach-title">Твои достижения</div>
+      <div class="ach-sub">открыто <span id="achOpened">0</span> из <span id="achTotal">8</span></div>
+    </div>
+    <ul class="ach-list" id="achList"></ul>
+  </div>
+  <div class="ach-toast" id="achToast">
+    <div class="ach-toast-ico">★</div>
+    <div class="ach-toast-body">
+      <div class="ach-toast-kicker">Новое достижение</div>
+      <div class="ach-toast-name" id="achToastName"></div>
+    </div>
+  </div>
+</div>
 
 <div class="lightbox" id="lightbox">
-    <button class="lb-close" id="lbClose" aria-label="Закрыть">✕</button>
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Назад">‹</button>
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Вперёд">›</button>
-    <div class="lb-content">
-        <img id="lbImg" src="" alt="">
-        <div class="lb-caption">
-            <div class="lb-title" id="lbTitle"></div>
-            <div class="lb-date" id="lbDate"></div>
-        </div>
-    </div>
-    <div class="lb-counter" id="lbCounter"></div>
+  <button class="lb-close" id="lbClose" aria-label="Закрыть">✕</button>
+  <img src="" alt="" id="lbImg">
+  <div class="lb-caption" id="lbCaption"></div>
 </div>
 
-<div class="gate" id="gate">
-    <div class="gate-inner">
-        <div class="gate-label">Личный выпуск · только для тебя</div>
-        <h1 class="gate-title">Введи<br><em>секретное слово</em></h1>
-        <p class="gate-subtitle">Подсказка: «Ты меня так называешь»</p>
-        <div class="gate-input-group">
-            <input type="password" class="gate-input" id="gateInput" placeholder="Слово..." autocomplete="off" autofocus>
-        </div>
-        <div class="gate-error" id="gateError">Не то слово, любимая. Попробуй ещё раз.</div>
-        <button class="gate-btn" id="gateBtn">Открыть выпуск</button>
-        <p class="gate-hint">Сделано с <strong>любовью</strong> для одной особенной девушки</p>
-    </div>
-</div>
-
-<div class="content" id="content">
-
-    <section class="hero">
-        <div class="hero-inner">
-            <div class="hero-top">
-                <div class="hero-top-left">
-                    <span class="hero-dot"></span>
-                    <span>Том I · Личное издание</span>
-                </div>
-                <div id="todayDate">—</div>
-            </div>
-
-            <h1 class="hero-title">
-                История<br>
-                моих чувств<br>
-                <span class="accent" id="heroName">к Николь</span>
-            </h1>
-
-            <div class="hero-bottom">
-                <p class="hero-desc" id="typewriter"></p>
-                <div class="hero-scroll">
-                    <span>Листай ниже</span>
-                    <span class="hero-scroll-arrow">↓</span>
-                </div>
-            </div>
-
-            <div class="counter">
-                <div class="counter-head">Мы вместе уже</div>
-                <div class="counter-grid">
-                    <div class="counter-cell"><span class="counter-num" id="years">0</span><span class="counter-label">Лет</span></div>
-                    <div class="counter-cell"><span class="counter-num" id="months">0</span><span class="counter-label">Месяцев</span></div>
-                    <div class="counter-cell"><span class="counter-num" id="days">0</span><span class="counter-label">Дней</span></div>
-                    <div class="counter-cell"><span class="counter-num" id="hours">00</span><span class="counter-label">Часов</span></div>
-                    <div class="counter-cell"><span class="counter-num" id="minutes">00</span><span class="counter-label">Минут</span></div>
-                    <div class="counter-cell"><span class="counter-num" id="seconds">00</span><span class="counter-label">Секунд</span></div>
-                </div>
-            </div>
-
-            <div id="heroQuote"></div>
-        </div>
-    </section>
-
-    <section class="spread reveal" id="meetingSection"></section>
-    <section class="spread reveal" id="timelineSection"></section>
-    <section class="spread reveal" id="gallerySection"></section>
-    <section class="spread reveal" id="separateGallerySection"></section>
-    <section class="spread reveal" id="nicknamesSection"></section>
-    <section class="spread reveal" id="momentsSection"></section>
-    <section class="spread reveal" id="bioFactsSection"></section>
-    <section class="spread reveal" id="poemSection"></section>
-    <section class="spread reveal" id="wheelSection"></section>
-    <section class="spread reveal" id="complimentSection"></section>
-    <section class="spread reveal" id="letterSection"></section>
-    <section class="spread reveal" id="secretSection"></section>
-    <section class="spread reveal" id="futureSection"></section>
-
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-mark">Сделано с <em>любовью</em> для Николь</div>
-            <div class="footer-meta">
-                <div>Том I · Личное издание</div>
-                <div id="footerDate">—</div>
-            </div>
-        </div>
-    </footer>
-
-</div>
-
-<script src="js/config.js"></script>
-<script src="js/effects.js"></script>
-<script src="js/counter.js"></script>
+<script src="js/lock-preloader.js"></script>
+<script src="js/background.js"></script>
+<script src="js/nav-music.js"></script>
+<script src="js/timers.js"></script>
+<script src="js/reveal.js"></script>
+<script src="js/carousel.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/typewriter.js"></script>
+<script src="js/quote-letters.js"></script>
+<script src="js/secret.js"></script>
 <script src="js/lightbox.js"></script>
-<script src="js/sections.js"></script>
-<script src="js/music.js"></script>
-<script src="js/gate.js"></script>
-<script src="js/main.js"></script>
 </body>
 </html>
